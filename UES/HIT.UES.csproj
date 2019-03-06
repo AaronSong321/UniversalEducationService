@@ -58,6 +58,7 @@
     <Compile Include="Basic\Settings.cs" />
     <Compile Include="Course\Course.cs" />
     <Compile Include="Course\CourseChapter.cs" />
+    <Compile Include="Course\CourseContent.cs" />
     <Compile Include="Course\CourseModule.cs" />
     <Compile Include="Course\CourseSection.cs" />
     <Compile Include="Exam\AnswerCheckModule.cs" />
@@ -93,6 +94,14 @@
     <Compile Include="Basic\UESObject.cs" />
     <Compile Include="Basic\UESSubsystem.cs" />
     <Compile Include="Basic\UESSystem.cs" />
+    <Compile Include="Migrations\201903061111566_auto.cs" />
+    <Compile Include="Migrations\201903061111566_auto.Designer.cs">
+      <DependentUpon>201903061111566_auto.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201903061359387_Auto20190306.cs" />
+    <Compile Include="Migrations\201903061359387_Auto20190306.Designer.cs">
+      <DependentUpon>201903061359387_Auto20190306.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -104,6 +113,14 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Notification\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201903061111566_auto.resx">
+      <DependentUpon>201903061111566_auto.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201903061359387_Auto20190306.resx">
+      <DependentUpon>201903061359387_Auto20190306.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -22,7 +22,6 @@ namespace HIT.UES
             uesContext.Exams.Load();
             uesContext.ExamPapers.Load();
             uesContext.ExamPaperInstances.Load();
-            //uesContext.ExamPaperRules.Load();
             uesContext.ExamQuestions.Load();
             uesContext.ExamQuestionSets.Load();
             

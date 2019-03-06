@@ -13,14 +13,14 @@ namespace HIT.UES.Exam
     public class StudentAnswerRecord : DatabaseType
     {
         public static string ScoreBelowZero = "The score you are giving is below zero. Think about it twice.";
-        public static string ScoreAboveMax(ushort maxScore, double score)
+        public static string ScoreAboveMax(int maxScore, double score)
             => $"The score {score} you are giving is above the maximum score {maxScore}.";
 
         public int StudentAnswerRecordID { get; private set; }
         public ExamPaperInstance SuperiorExamPaperInstance { get; private set; }
-        public ushort Order { get; private set; }
+        public int Order { get; private set; }
         public Student Candidate { get; private set; }
-        public ushort MaxScore { get; private set; }
+        public int MaxScore { get; private set; }
         public double? Score { get; private set; }
         public bool Answered { get; private set; }
         public bool Checked { get; private set; }

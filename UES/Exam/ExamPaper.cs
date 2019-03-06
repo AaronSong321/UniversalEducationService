@@ -239,12 +239,11 @@ namespace HIT.UES.Exam
 
         public void ExchangeOrder(QuestionChooseRecord data1, QuestionChooseRecord data2)
         {
-            ushort temp = data1.QuestionOrder;
+            int temp = data1.QuestionOrder;
             data1.ModifyOrder(data2.QuestionOrder);
             data2.ModifyOrder(temp);
             Settings.SaveDataModification(data1);
             Settings.SaveDataModification(data2);
-            //Settings.SaveDataModification(this);
         }
 
         public void ChangeOrder(QuestionChooseRecord data, ushort newOrder)

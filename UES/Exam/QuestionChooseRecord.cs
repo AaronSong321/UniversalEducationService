@@ -14,8 +14,8 @@ namespace HIT.UES.Exam
     {
         public int QuestionChooseRecordID { get; private set; }
         public ExamPaper SuperiorExamPaper { get; private set; }
-        public ushort QuestionOrder { get; private set; }
-        public ushort MaxScore { get; private set; }
+        public int QuestionOrder { get; private set; }
+        public int MaxScore { get; private set; }
         public bool ChooseFinished { get; private set; }
         public ExamQuestion Question { get; private set; }
 
@@ -23,7 +23,7 @@ namespace HIT.UES.Exam
         {
             ChooseFinished = false;
         }
-        public QuestionChooseRecord(ExamPaper paper, ushort order, ushort score, ExamQuestion question)
+        public QuestionChooseRecord(ExamPaper paper, int order, int score, ExamQuestion question)
         {
             SuperiorExamPaper = paper;
             QuestionOrder = order;
@@ -31,7 +31,7 @@ namespace HIT.UES.Exam
             Question = question;
             ChooseFinished = false;
         }
-        public QuestionChooseRecord(ExamPaper paper, ushort score, ExamQuestion question)
+        public QuestionChooseRecord(ExamPaper paper, int score, ExamQuestion question)
         {
             SuperiorExamPaper = paper;
             QuestionOrder = (ushort)(paper.GetQuestionNumber() + 1);
@@ -47,7 +47,7 @@ namespace HIT.UES.Exam
             Question = record.Question;
             ChooseFinished = false;
         }
-        public void ModifyOrder(ushort order) => QuestionOrder = order;
+        public void ModifyOrder(int order) => QuestionOrder = order;
 
         public override string CastObjectToJson()
             => JsonConvert.SerializeObject(this, new JsonSerializerSettings

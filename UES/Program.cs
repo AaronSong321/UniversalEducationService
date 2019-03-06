@@ -14,11 +14,8 @@ namespace HIT.UES
         static void Main(string[] args)
         {
             var test = new Test();
-            //test.PersonCreate();
+            test.PersonCreate();
             test.DemonstratePerson();
-            Thread t = new Thread(test.CounterTest);
-            t.Start();
-            Console.WriteLine("Nothing");
             Console.ReadLine();
         }
     }
