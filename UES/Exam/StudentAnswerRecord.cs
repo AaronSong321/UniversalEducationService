@@ -63,12 +63,14 @@ namespace HIT.UES.Exam
             }
         }
 
-        public void GiveScore(Teacher teacher, float score, out string errorMessage)
+        public void GiveScore(Teacher teacher, double score, out string errorMessage)
         {
             if (!SuperiorExamPaperInstance.SuperiorExamPaper.SuperiorExam.HasExamineAuthority(teacher))
             {
                 errorMessage = Exam.NoExamineAuthority;
             }
+            else if (!SuperiorExamPaperInstance.StudentSubmitted)
+                errorMessage = "The exam is not finished and you cannot give a score.";
             else if (score > MaxScore)
             {
                 errorMessage = ScoreAboveMax(MaxScore, score);
@@ -89,6 +91,8 @@ namespace HIT.UES.Exam
             => GiveScore(teacher, MaxScore, out errorMessage);
         internal void GiveScore(AutoCheckRule rule, double score)
         {
+            if (!SuperiorExamPaperInstance.StudentSubmitted)
+                return;
             Score = score;
             Checked = true;
             Settings.SaveDataModification(this);

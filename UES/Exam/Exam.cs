@@ -270,6 +270,23 @@ namespace HIT.UES.Exam
             return null;
         }
 
+        public List<ExamPaperInstance> GetExamPaperInstances(Teacher teacher)
+        {
+            if (HasExamineAuthority(teacher))
+                return StudentPaper;
+            else
+                return null;
+        }
+        public List<ExamPaperInstance> GetFinishedInstances(Teacher teacher)
+        {
+            if (HasAdminAuthority(teacher))
+            {
+                return (from b in StudentPaper where b.StudentSubmitted && !b.TeacherSubmitted select b).ToList();
+            }
+            else
+                return null;
+        }
+
         #region Inherited and Implemented Members
         public override string CastObjectToJson()
             => JsonConvert.SerializeObject(this, new JsonSerializerSettings

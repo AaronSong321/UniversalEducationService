@@ -14,16 +14,17 @@ namespace HIT.UES.Exam
     {
         public string QuestionTrunk { get; private set; }
         public string CorrectAnswer { get; private set; }
+        //public List<(double, Teacher)> BackupScore { get; private set; }
 
         public FreeResponseQuestion()
         {
-
+            //BackupScore = new List<(double, Teacher)>();
         }
         public FreeResponseQuestion(Teacher creator, ExamQuestionSet superiorSet, string explanation, 
             string indexWord)
             : base(creator, superiorSet, explanation, indexWord, QuestionType.FreeResponse)
         {
-
+            //BackupScore = new List<(double, Teacher)>();
         }
         public FreeResponseQuestion(Teacher creator, FreeResponseQuestion other)
             :base (creator, other)
@@ -78,7 +79,7 @@ namespace HIT.UES.Exam
                 errorMessage = null;
             }
             else
-                errorMessage = OperatorNotCreatorString;
+                errorMessage = OperatorNotCreator;
         }
 
         public override string CastObjectToJson()

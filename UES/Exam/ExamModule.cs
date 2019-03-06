@@ -21,8 +21,9 @@ namespace HIT.UES.Exam
         public (List<QuestionChooseRecord>, List<StudentAnswerRecord>, double) GetOngoingExamState
             (ExamPaperInstance instance, Student student, out string errorMessage)
             => instance.GetCurrentOngoingExamState(student, out errorMessage);
+        public void StoreAnswer(StudentAnswerRecord record, Student student, string answer, out string errorMessage)
+            => record.StoreAnswer(student, answer, out errorMessage);
         public void StudentSubmit(ExamPaperInstance instance, Student student, out string errorMessage)
             => instance.StudentSubmit(student, out errorMessage);
-
     }
 }

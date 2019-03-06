@@ -76,7 +76,7 @@ namespace HIT.UES.Exam
                 errorMessage = null;
             }
             else
-                errorMessage = OperatorNotCreatorString;
+                errorMessage = OperatorNotCreator;
         }
 
         public override string CastObjectToJson()
@@ -104,7 +104,7 @@ namespace HIT.UES.Exam
             }
             else
             {
-                errorMessage = OperatorNotCreatorString;
+                errorMessage = OperatorNotCreator;
             }
         }
     }

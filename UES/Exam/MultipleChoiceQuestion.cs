@@ -15,7 +15,7 @@ namespace HIT.UES.Exam
         public static ushort OptionNumberMax = 5;
         public static ushort OptionNumberMin = 2;
 
-        public ushort OptionNumber { get; }
+        public ushort OptionNumber { get; private set; }
         public ushort CorrectOptionNumber { get; private set; }
         public string QuestionTrunk { get; private set; }
         public string OptionA { get; private set; }
@@ -139,7 +139,7 @@ namespace HIT.UES.Exam
             }
             else
             {
-                errorMessage = OperatorNotCreatorString;
+                errorMessage = OperatorNotCreator;
             }
         }
 
@@ -218,7 +218,7 @@ namespace HIT.UES.Exam
             }
             else
             {
-                invalidity = OperatorNotCreatorString;
+                invalidity = OperatorNotCreator;
                 return false;
             }
         }

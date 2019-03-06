@@ -8,6 +8,6 @@ namespace HIT.UES.Exam
 {
     public class ExamScoreModule: UESModule 
     {
-
+        //Don't know what to do here.
     }
 }

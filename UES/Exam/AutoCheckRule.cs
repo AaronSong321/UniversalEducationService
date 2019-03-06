@@ -21,9 +21,10 @@ namespace HIT.UES.Exam
         }
     }
 
+    [NotMapped]
     public class AutoCheckRule
     {
-        public void CheckAnswer(StudentAnswerRecord record)
+        public virtual void CheckAnswer(StudentAnswerRecord record)
         {
             switch (record.SuperiorQuestion.ExamQuestionType)
             {
@@ -40,7 +41,7 @@ namespace HIT.UES.Exam
                     break;
             }
         }
-        public virtual float CheckMultipleChoiceAnswer(StudentAnswerRecord record)
+        public virtual double CheckMultipleChoiceAnswer(StudentAnswerRecord record)
         {
             var answer = record.Answer;
             var correct = record.SuperiorQuestion.GetAnswerString();

@@ -13,7 +13,7 @@ namespace HIT.UES.Exam
 {
     public abstract class ExamQuestion : DatabaseType
     {
-        public static string OperatorNotCreatorString = "You are not the creator of this question, so you cannot modify it. " +
+        public static string OperatorNotCreator = "You are not the creator of this question, so you cannot modify it. " +
             "Maybe you want to create a copy of this question and make a new one?";
         public enum QuestionType { SingleChoice, MultipleChoice, DisorientedChoice, TrueFalse, FreeResponse, Other }
 
@@ -126,7 +126,7 @@ namespace HIT.UES.Exam
             }
             else
             {
-                errorMessage = OperatorNotCreatorString;
+                errorMessage = OperatorNotCreator;
             }
         }
         public virtual void ConfirmQuestionCreation(Teacher teacher, out string errorMessage)
@@ -144,7 +144,7 @@ namespace HIT.UES.Exam
                 }
             }
             else
-                errorMessage = OperatorNotCreatorString;
+                errorMessage = OperatorNotCreator;
         }
 
         [NotMapped]
@@ -177,7 +177,7 @@ namespace HIT.UES.Exam
                 errorMessage = null;
             }
             else
-                errorMessage = OperatorNotCreatorString;
+                errorMessage = OperatorNotCreator;
         }
 
         public override int GetHashCode() => ExamQuestionID;

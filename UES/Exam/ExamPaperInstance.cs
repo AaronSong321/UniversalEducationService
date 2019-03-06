@@ -19,6 +19,7 @@ namespace HIT.UES.Exam
         public static string StudentDidnotSubmit = "The student has not yet submitted the exam paper instance.";
         public static string TeacherAlreadySubmit = "The answer has been submitted and you need not duplicate the operation.";
         public static string NotOngoing = "The exam has not started yet.";
+        public static string NoTotalScore = "There is no total score.";
 
         public int ExamPaperInstanceID { get; private set; }
         public ExamPaper SuperiorExamPaper { get; private set; }
@@ -193,16 +194,22 @@ namespace HIT.UES.Exam
             TeacherSubmitted = true;
             Settings.SaveDataModification(this);
         }
-        public string TeacherSubmit(Teacher teacher)
+        public void TeacherSubmit(Teacher teacher, out string errorMessage)
         {
             if (!SuperiorExamPaper.SuperiorExam.HasExamineAuthority(teacher))
-                return Exam.NoExamineAuthority;
-            if (!StudentSubmitted)
-                return StudentDidnotSubmit;
-            if (TeacherSubmitted)
-                return TeacherAlreadySubmit;
-            TeacherSubmit();
-            return null;
+                errorMessage = Exam.NoExamineAuthority;
+            else if (!StudentSubmitted)
+                errorMessage = StudentDidnotSubmit;
+            else if (TeacherSubmitted)
+                errorMessage = TeacherAlreadySubmit;
+            else if (StudentScore == null)
+                errorMessage = NoTotalScore;
+            else
+            {
+                TeacherSubmit();
+                errorMessage = null;
+
+            }
         }
 
         public void AutoSave()
@@ -235,6 +242,33 @@ namespace HIT.UES.Exam
                 return ExamPaperInstanceID == instance.ExamPaperInstanceID;
             else
                 return false;
+        }
+
+        public double? CalculateTotalScore(out string errorMessage)
+        {
+            if (!StudentSubmitted)
+            {
+                errorMessage = "The exam has not been finished yet.";
+                return null;
+            }
+            else
+            {
+                double score = 0;
+                foreach (var sar in Answers)
+                {
+                    if (sar.Score == null)
+                    {
+                        errorMessage = $"Question {sar.Order} has not been given a score yet.";
+                        return null;
+                    }
+                    else
+                        score += sar.Score.Value;
+                }
+                errorMessage = null;
+                StudentScore = score;
+                Settings.SaveDataModification(this);
+                return score;
+            }
         }
     }
 }
