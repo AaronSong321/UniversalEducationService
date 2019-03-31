@@ -16,6 +16,7 @@ namespace HIT.UES.Exam
         public string CorrectAnswer { get; private set; }
         //public List<(double, Teacher)> BackupScore { get; private set; }
 
+        #region Creation Methods
         public FreeResponseQuestion()
         {
             //BackupScore = new List<(double, Teacher)>();
@@ -64,7 +65,9 @@ namespace HIT.UES.Exam
                 return null;
             }
         }
+        #endregion
 
+        #region Question and Answer
         internal void SetQuestion(string trunk)
         {
             QuestionTrunk = trunk;
@@ -81,28 +84,33 @@ namespace HIT.UES.Exam
             else
                 errorMessage = OperatorNotCreator;
         }
+        public void SetAnswer(string answer, Teacher teacher, out string errorMessage)
+        {
+            if (teacher != Creator)
+            {
+                errorMessage = OperatorNotCreator;
+            }
+            else if (Finished)
+            {
+                errorMessage = FinishedQuestionIsReadonly;
+            }
+            else
+            {
+                CorrectAnswer = answer;
+                errorMessage = null;
+                Settings.SaveDataModification(this);
+            }
+        }
+        #endregion
 
+        #region Override and Implemented Members
         public override string CastObjectToJson()
             => JsonConvert.SerializeObject(this, new JsonSerializerSettings
             { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
         public override XmlDocument CastObjectToXml()
             => JsonConvert.DeserializeXmlNode(CastObjectToJson());
-
         public override string GetAnswerString() => CorrectAnswer;
-
         public override string GetQuestionString() => QuestionTrunk;
-
-        public override void SetAnswer(string answer) => CorrectAnswer = answer;
-        public void SetAnswer(string answer, Teacher teacher, out string errorMessage)
-        {
-            if (teacher == Creator)
-            {
-                SetAnswer(answer);
-                errorMessage = null;
-                Settings.SaveDataModification(this);
-            }
-            else
-                errorMessage = null;
-        }
+        #endregion
     }
 }

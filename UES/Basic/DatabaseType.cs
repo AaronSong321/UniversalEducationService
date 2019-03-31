@@ -11,7 +11,6 @@ namespace HIT.UES
 {
     public abstract class DatabaseType
     {
-        //public abstract string CastObjectToString();
         public abstract XmlDocument CastObjectToXml();
         public abstract string CastObjectToJson();
     }

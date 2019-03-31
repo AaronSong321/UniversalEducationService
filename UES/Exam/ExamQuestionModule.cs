@@ -115,14 +115,6 @@ namespace HIT.UES.Exam
             => question.GetQuestionString();
         public string GetAnswerSstring(ExamQuestion question)
             => question.GetAnswerString();
-        /// <summary>
-        /// Although the base class ExamQuestion contains an abstract method SetAnswer to set the answer of it, you should
-        /// use the responding method in a question's own definition.
-        /// </summary>
-        /// <param name="question"></param>
-        /// <param name="answer"></param>
-        public void SetAnswer(ExamQuestion question, string answer)
-            => question.SetAnswer(answer);
         public void SetExplanation(ExamQuestion question, string explanation, Teacher teacher, out string errorMessage)
             => question.SetExplanation(explanation, teacher, out errorMessage);      
         #endregion

@@ -15,6 +15,7 @@ namespace HIT.UES.Exam
         public static ushort OptionNumberMax = 5;
         public static ushort OptionNumberMin = 2;
 
+        #region Members and Properties
         public ushort OptionNumber { get; private set; }
         public ushort CorrectOptionNumber { get; private set; }
         public string QuestionTrunk { get; private set; }
@@ -24,7 +25,9 @@ namespace HIT.UES.Exam
         public string OptionD { get; private set; }
         public string OptionE { get; private set; }
         public string CorrectAnswer { get; private set; }
+        #endregion
 
+        #region Creation and Basic information
         public MultipleChoiceQuestion()
         {
 
@@ -86,8 +89,10 @@ namespace HIT.UES.Exam
                 return null;
             }
         }
+        #endregion
 
-        internal void SetQuestion(string trunk, string a, string b, string c, string d, string e)
+        #region Set Question and Answer
+        private void SetQuestion(string trunk, string a, string b, string c, string d, string e)
         {
             QuestionTrunk = trunk;
             if (OptionNumber >= 1) OptionA = a;
@@ -103,6 +108,11 @@ namespace HIT.UES.Exam
         {
             if (teacher == Creator)
             {
+                if (Finished)
+                {
+                    errorMessage = FinishedQuestionIsReadonly;
+                    return;
+                }
                 List<char> nullChars = new List<char>();
 
                 if (a == null)
@@ -143,33 +153,6 @@ namespace HIT.UES.Exam
             }
         }
 
-        public override string CastObjectToJson()
-            => JsonConvert.SerializeObject(this, new JsonSerializerSettings
-            { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
-        public override XmlDocument CastObjectToXml()
-            => JsonConvert.DeserializeXmlNode(CastObjectToJson());
-
-        public override string GetAnswerString() => CorrectAnswer;
-
-        public override string GetQuestionString()
-        {
-            var ans = $"{QuestionTrunk} (   )\nA. {OptionA}\nB. {OptionB}\n";
-            if (OptionNumber >= 3) ans += $"C. {OptionC}\n";
-            if (OptionNumber >= 4) ans += $"D. {OptionD}\n";
-            if (OptionNumber >= 5) ans += $"E. {OptionE}\n";
-            return ans;
-        }
-
-        /// <summary>
-        /// Should not be called externally.
-        /// </summary>
-        /// <param name="answer"></param>
-        public override void SetAnswer(string answer)
-        {
-            CorrectAnswer = answer;
-            LastModifyTime = DateTime.Now;
-            Settings.SaveDataModification(this);
-        }
         public virtual bool CheckAnswerValidity(string answer, out string invalidity)
         {
             if (answer.Length > OptionNumber)
@@ -203,14 +186,23 @@ namespace HIT.UES.Exam
             invalidity = null;
             return true;
         }
-        internal virtual bool CheckAndSetAnswer(string answer, out string invalidity)
+        internal virtual bool CheckAndSetAnswer(in string answer, out string invalidity)
         {
+            if (Finished)
+            {
+                invalidity = FinishedQuestionIsReadonly;
+                return false;
+            }
             var validity = CheckAnswerValidity(answer, out invalidity);
             if (validity)
-                SetAnswer(answer);
+            {
+                CorrectAnswer = answer;
+                LastModifyTime = DateTime.Now;
+                Settings.SaveDataModification(this);
+            }
             return validity;
         }
-        public bool SetMultipleChoiceAnswer(string answer, Teacher teacher, out string invalidity)
+        public bool SetMultipleChoiceAnswer(in string answer, in Teacher teacher, out string invalidity)
         {
             if (teacher == Creator)
             {
@@ -222,5 +214,25 @@ namespace HIT.UES.Exam
                 return false;
             }
         }
+        #endregion
+
+        #region Inherited and Implemeted Members
+        public override string CastObjectToJson()
+            => JsonConvert.SerializeObject(this, new JsonSerializerSettings
+            { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+        public override XmlDocument CastObjectToXml()
+            => JsonConvert.DeserializeXmlNode(CastObjectToJson());
+
+        public override string GetAnswerString() => CorrectAnswer;
+
+        public override string GetQuestionString()
+        {
+            var ans = $"{QuestionTrunk} (   )\nA. {OptionA}\nB. {OptionB}\n";
+            if (OptionNumber >= 3) ans += $"C. {OptionC}\n";
+            if (OptionNumber >= 4) ans += $"D. {OptionD}\n";
+            if (OptionNumber >= 5) ans += $"E. {OptionE}\n";
+            return ans;
+        }
+        #endregion
     }
 }

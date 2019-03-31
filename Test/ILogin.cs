@@ -62,7 +62,7 @@ namespace HIT.UES.Server.ServiceDeclaration
         [WebInvoke(Method = "POST", UriTemplate = LoginServiceHelper.CreateExam, BodyStyle = WebMessageBodyStyle.Wrapped,
             RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
         Exam.Exam CreateExam(string name, int creatorId, string department, string indexWord, ushort maxScore, string description, DateTime allowSignInTime,
-            DateTime allowAttendTime, double examDuration, DateTime studentDeadline, DateTime teacherDeadline, DateTime scorePublic, DateTime epgd);
+            DateTime allowAttendTime, double examDuration, DateTime studentDeadline, DateTime teacherDeadline, DateTime scorePublic, DateTime epgd, out string em);
         
 
 

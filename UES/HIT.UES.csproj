@@ -70,7 +70,6 @@
     <Compile Include="Exam\ExamInformationModule.cs" />
     <Compile Include="Exam\ExamModule.cs" />
     <Compile Include="Exam\ExamPaper.cs" />
-    <Compile Include="Exam\ExamPaperGenerator.cs" />
     <Compile Include="Exam\ExamPaperInstance.cs" />
     <Compile Include="Exam\ExamPaperModule.cs" />
     <Compile Include="Exam\ExamPaperRule.cs" />
@@ -94,7 +93,6 @@
     <Compile Include="Basic\IOrderedDataContainer.cs" />
     <Compile Include="Basic\UESContext.cs" />
     <Compile Include="Basic\UESModule.cs" />
-    <Compile Include="Basic\UESObject.cs" />
     <Compile Include="Basic\UESSubsystem.cs" />
     <Compile Include="Basic\UESSystem.cs" />
     <Compile Include="Migrations\201903210604378_M20190321-1.cs" />

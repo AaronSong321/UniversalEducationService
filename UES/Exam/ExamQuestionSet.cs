@@ -14,6 +14,7 @@ namespace HIT.UES.Exam
     
     public class ExamQuestionSet : DatabaseType
     {
+        #region Static Error Messages
         public static string NoUseAuthority = "You do not have the authority to use current question set.";
         public int ExamQuestionSetID { get; private set; }
         public string QuestionSetName { get; private set; }
@@ -23,8 +24,9 @@ namespace HIT.UES.Exam
         public virtual List<Teacher> AuthorizedOperators { get; private set; }
         public virtual List<Teacher> AuthorizedUsers { get; private set; }
         public virtual List<ExamQuestion> QuestionSet { get; private set; }
+        #endregion
 
-        #region Basic Information
+        #region Creation Methods
         public ExamQuestionSet()
         {
 
@@ -152,6 +154,7 @@ namespace HIT.UES.Exam
         }
         #endregion
 
+        #region Add Question
         internal List<ExamQuestion> FindSimilarQuestions(string indexWord)
         {
             var ans = new List<ExamQuestion>();
@@ -189,7 +192,9 @@ namespace HIT.UES.Exam
             if (val) LastModifyTime = DateTime.Now;
             Settings.SaveDataModification(this);
         }
+        #endregion
 
+        #region Query Questions
         public (List<ExamQuestion>, string) GetAllExamQuestions(Teacher teacher)
         {
             if (HasUseAuthority(teacher)) return (QuestionSet, null);
@@ -212,14 +217,18 @@ namespace HIT.UES.Exam
             if (HasUseAuthority(teacher)) return (GetExamQuestion(indexWord), null);
             else return (null, NoUseAuthority);
         }
+        #endregion
 
+        #region Query Question Set
         public static List<ExamQuestionSet> GetAllQuestionSets()
             => Settings.uesContext.ExamQuestionSets.ToList();
         public static List<ExamQuestionSet> GetQuestionSet(Predicate<ExamQuestionSet> filter)
             => (from b in Settings.uesContext.ExamQuestionSets where filter(b) select b).ToList();
         public static List<ExamQuestionSet> GetQuestionSet(string indexWord)
             => GetQuestionSet((eqs) => eqs.IndexWord.Contains(indexWord) || eqs.QuestionSetName.Contains(indexWord));
+        #endregion
 
+        #region Override and Implemented Members
         public override string CastObjectToJson()
             => JsonConvert.SerializeObject(this, new JsonSerializerSettings
             { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
@@ -233,5 +242,6 @@ namespace HIT.UES.Exam
                 return set.ExamQuestionSetID == ExamQuestionSetID;
             else return false;
         }
+        #endregion
     }
 }

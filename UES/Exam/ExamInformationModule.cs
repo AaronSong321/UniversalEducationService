@@ -9,28 +9,22 @@ namespace HIT.UES.Exam
 {
     public class ExamInformationModule: UESModule
     {
-        public (Exam, string) CreateExam(string name, Teacher creator, string department, string indexWord,
-            string description, ushort maxScore = 100)
-            => Exam.CreateExam(name, creator, department, indexWord, description, maxScore);
-        public string ModifyExamInformation(Exam exam, string name, Teacher teacher, string department, string indexWord,
-            string description, ushort maxScore)
-            => exam.ModifyExam(name, teacher, department, indexWord, description, maxScore);
+        public Exam CreateExam(string name, Teacher creator, string department, string indexWord, string description, ushort maxScore, DateTime allowSignIn, DateTime allowAttend, double examDuration,
+            DateTime studentSubmit, DateTime teacherSubmit, DateTime scorePublic, DateTime examPaperGeneration, out string em)
+            => Exam.CreateExam(name, creator, department, indexWord, description, maxScore, allowSignIn, allowAttend, examDuration, studentSubmit,
+                teacherSubmit, scorePublic, examPaperGeneration,out em);
+        public void ModifyExam(Exam exam, string name, Teacher teacher, string department, string indexWord,
+            string description, ushort maxScore, DateTime allowSignIn, DateTime allowAttend,
+            float examDuration, DateTime studentSubmit, DateTime teacherSubmit, DateTime scorePublic, DateTime examPaperGeneration, out string em)
+            => exam.ModifyExam(name, teacher, department, indexWord, description, maxScore, allowSignIn, allowAttend, examDuration, studentSubmit,
+                teacherSubmit, scorePublic, examPaperGeneration, out em);
         public List<Exam> GetAllExams()
             => Exam.GetAllExams();
         public List<Exam> GetExam(Predicate<Exam> filter)
             => Exam.GetExam(filter);
-        public List<Exam> GetExam(string indexWord)
-            => Exam.GetExam(indexWord);
+        public List<Exam> GetExam(string indexWord) => Exam.GetExam(indexWord);
         public void SignInForExam(Student student, Exam exam, out string errorMessage)
             => exam.SignInForExam(student, out errorMessage);
-        public string ModifyExam(Exam exam, string name, Teacher teacher, string department, string indexWord,
-            string description, ushort maxScore)
-            => exam.ModifyExam(name, teacher, department, indexWord, description, maxScore);
-        public string ModifyDateTime(Exam exam, Teacher teacher, DateTime allowSignIn, DateTime allowAttend,
-            float examDuration, DateTime studentSubmit,
-            DateTime teacherSubmit, DateTime scorePublic, DateTime examPaperGeneration)
-            => exam.ModifyDateTime(teacher, allowSignIn, allowAttend, examDuration, studentSubmit,
-                teacherSubmit, scorePublic, examPaperGeneration);
         public void AddToPaperAdmin(Exam exam, Teacher creator, Teacher teacher, out string errorMessage)
             => errorMessage = exam.AddToPaperAdmin(creator, teacher);
         public bool HasAdminAuthority(Exam exam, Teacher teacher)

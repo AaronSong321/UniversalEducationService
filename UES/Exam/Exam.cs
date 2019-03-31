@@ -63,9 +63,9 @@ namespace HIT.UES.Exam
         /// <summary>
         /// Containing all the exam paper of this exam, whether completed or not
         /// </summary>
-        public virtual List<ExamPaper> AvailableExamPaper { get; }
-        public virtual List<ExamPaperInstance> StudentPaper { get; }
-        public virtual List<Student> SignedInStudent { get; }
+        public virtual List<ExamPaper> ExamPapers { get; }
+        public virtual List<ExamPaperInstance> StudentPapers { get; }
+        public virtual List<Student> SignedInStudents { get; }
         #endregion
 
         #region Create and Modify
@@ -73,11 +73,11 @@ namespace HIT.UES.Exam
         {
 
         }
-        public Exam(string name, Teacher creator, string department, string indexWord, string description, ushort maxScore = 100)
+        public Exam(string name, Teacher creator, string department, string indexWord, string description, ushort maxScore, DateTime allowSignIn, DateTime allowAttend, double examDuration,
+            DateTime studentsubmit, DateTime teacherSubmit, DateTime scorePublic, DateTime examPaperGeneration)
         {
             ExamName = name;
             Creator = creator;
-            CreationTime = DateTime.Now;
             Department = department;
             IndexWord = indexWord;
             Description = description;
@@ -89,33 +89,40 @@ namespace HIT.UES.Exam
                 creator
             };
             AuthorizedPaperExaminor = new List<Teacher> { creator };
-            AvailableExamPaper = new List<ExamPaper>();
-            StudentPaper = new List<ExamPaperInstance>();
-            SignedInStudent = new List<Student>();
+            ExamPapers = new List<ExamPaper>();
+            StudentPapers = new List<ExamPaperInstance>();
+            SignedInStudents = new List<Student>();
 
-            AllowSignInTime = CreationTime;
-            AllowAttendTime = CreationTime;
-            StudentSubmitDeadline = CreationTime;
-            TeacherSubmitDeadline = CreationTime;
-            ScorePublicTime = CreationTime;
-            ExamPaperGenerationDeadline = CreationTime;
+            AllowSignInTime = allowSignIn;
+            AllowAttendTime = allowAttend;
+            ExamDuration = examDuration;
+            StudentSubmitDeadline = studentsubmit;
+            TeacherSubmitDeadline = teacherSubmit;
+            ScorePublicTime = scorePublic;
+            ExamPaperGenerationDeadline = examPaperGeneration;
+            CreationTime = DateTime.Now;
             LastModifyTime = CreationTime;
         }
-        public static (Exam, string) CreateExam(string name, Teacher creator, string department, string indexWord, 
-            string description, ushort maxScore = 100)
+        public static Exam CreateExam(string name, Teacher creator, string department, string indexWord, string description, ushort maxScore, DateTime allowSignIn, DateTime allowAttend, double examDuration,
+            DateTime studentsubmit, DateTime teacherSubmit, DateTime scorePublic, DateTime examPaperGeneration, out string em)
         {
             if (!creator.DepartmentAdminAuthority)
-                return (null, NotDepartmentAdmin);
+            {
+                em = NotDepartmentAdmin;
+                return null;
+            }
             else
             {
-                var e = new Exam(name, creator, department, indexWord, description, maxScore);
+                var e = new Exam(name, creator, department, indexWord, description, maxScore, allowSignIn, allowAttend, examDuration, studentsubmit, teacherSubmit, scorePublic, examPaperGeneration);
                 creator.AddtoExamCreation(e);
                 Settings.SaveDataCreation(e);
-                return (e, null);
+                em = null;
+                return e;
             }
         }
-        public string ModifyExam(string name, Teacher teacher, string department, string indexWord, string description,
-            ushort maxScore = 100)
+        public void ModifyExam(string name, Teacher teacher, string department, string indexWord, string description,
+            ushort maxScore, DateTime allowSignIn, DateTime allowAttend, double examDuration,
+            DateTime studentsubmit, DateTime teacherSubmit, DateTime scorePublic, DateTime examPaperGeneration, out string em)
         {
             if (teacher.DepartmentAdminAuthority)
             {
@@ -126,18 +133,6 @@ namespace HIT.UES.Exam
                 MaxScore = maxScore;
                 LastModifyTime = DateTime.Now;
                 LastOperator = teacher;
-                Settings.SaveDataModification(this);
-                return null;
-            }
-            else
-                return NotDepartmentAdmin;
-        }
-        public string ModifyDateTime(Teacher teacher, DateTime allowSignIn, DateTime allowAttend, double examDuration,
-            DateTime studentsubmit, 
-            DateTime teacherSubmit, DateTime scorePublic, DateTime examPaperGeneration)
-        {
-            if (teacher.DepartmentAdminAuthority)
-            {
                 AllowSignInTime = allowSignIn;
                 AllowAttendTime = allowAttend;
                 ExamDuration = examDuration;
@@ -148,10 +143,10 @@ namespace HIT.UES.Exam
                 LastOperator = teacher;
                 LastModifyTime = DateTime.Now;
                 Settings.SaveDataModification(this);
-                return null;
+                em = null;
             }
             else
-                return NotDepartmentAdmin;
+                em = NotDepartmentAdmin;
         }
         #endregion
 
@@ -240,9 +235,10 @@ namespace HIT.UES.Exam
             => GetExam((exam) => exam.ExamName.Contains(indexWord) || exam.IndexWord.Contains(indexWord));
         #endregion
 
+        #region Sign in and Start an exam
         public void SignInForExam(Student student, out string errorMessage)
         {
-            if (SignedInStudent.Contains(student))
+            if (SignedInStudents.Contains(student))
             {
                 errorMessage = "You haev already signed in.";
             }
@@ -253,7 +249,7 @@ namespace HIT.UES.Exam
             }
             else
             {
-                SignedInStudent.Add(student);
+                SignedInStudents.Add(student);
                 //student.ExamRegistered.Add(this);
                 Settings.SaveDataModification(this);
                 errorMessage = null;
@@ -261,7 +257,7 @@ namespace HIT.UES.Exam
         }
         public ExamPaperInstance StartExam(Student student, out string errorMessage)
         {
-            if (!SignedInStudent.Contains(student))
+            if (!SignedInStudents.Contains(student))
             {
                 errorMessage = NotSignedIn;
             }
@@ -272,24 +268,37 @@ namespace HIT.UES.Exam
             }
             else
             {
-                var chosenPaper = AvailableExamPaper[new Random().Next(0, AvailableExamPaper.Count)];
+                var chosenPaper = ExamPapers[new Random().Next(0, ExamPapers.Count)];
                 var k = chosenPaper.GenerateExamPaperInstance(student, out errorMessage);
                 if (k == null)
                 {
                     return null;
                 }
-                StudentPaper.Add(k);
+                StudentPapers.Add(k);
                 Settings.SaveDataModification(this);
                 k.StartExamPaperInstance();
                 return k;
             }
             return null;
         }
+        #endregion
 
+        #region Exam Papers and Instances
+        public List<ExamPaper> GetAvaiablePapers(Teacher teacher)
+        {
+            if (!HasAdminAuthority(teacher))
+            {
+                return null;
+            }
+            else
+            {
+                return (from b in ExamPapers where b.Creator == teacher || b.Finished select b).ToList();
+            }
+        }
         public List<ExamPaperInstance> GetExamPaperInstances(Teacher teacher)
         {
             if (HasExamineAuthority(teacher))
-                return StudentPaper;
+                return StudentPapers;
             else
                 return null;
         }
@@ -297,11 +306,12 @@ namespace HIT.UES.Exam
         {
             if (HasAdminAuthority(teacher))
             {
-                return (from b in StudentPaper where b.StudentSubmitted && !b.TeacherSubmitted select b).ToList();
+                return (from b in StudentPapers where b.StudentSubmitted && !b.TeacherSubmitted select b).ToList();
             }
             else
                 return null;
         }
+        #endregion
 
         #region Inherited and Implemented Members
         public override string CastObjectToJson()

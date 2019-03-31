@@ -66,21 +66,21 @@ namespace HIT.UES.Exam
             QuestionSet = new List<QuestionChooseRecord>();
             Instances = new List<ExamPaperInstance>();
         }
-        public static ExamPaper CreateExamPaper(Exam superiorExam, Teacher creator, string indexWord, string description,
+        public static ExamPaper CreateExamPaper(Exam superiorExam, Teacher examAdmin, string indexWord, string description,
             float duration, ushort score, out string errorMessage)
         {
-            if (superiorExam.HasAdminAuthority(creator))
+            if (superiorExam.HasAdminAuthority(examAdmin))
             {
-                var a = new ExamPaper(superiorExam, creator, indexWord, description, duration, score);
+                var a = new ExamPaper(superiorExam, examAdmin, indexWord, description, duration, score);
                 Settings.SaveDataCreation(a);
-                superiorExam.AvailableExamPaper.Add(a);
+                superiorExam.ExamPapers.Add(a);
                 Settings.SaveDataModification(superiorExam);
                 errorMessage = null;
                 return a;
             }
             else
             {
-                errorMessage = "Access denied. Authority authentication failed.";
+                errorMessage = Exam.NoExamineAuthority;
                 return null;
             }
         }
@@ -131,7 +131,7 @@ namespace HIT.UES.Exam
                 errorMessage = null;
                 var a = new ExamPaper(teacher, other);
                 Settings.SaveDataCreation(a);
-                other.SuperiorExam.AvailableExamPaper.Add(a);
+                other.SuperiorExam.ExamPapers.Add(a);
                 Settings.SaveDataModification(a);
                 return a;
             }
@@ -222,6 +222,7 @@ namespace HIT.UES.Exam
         }
         #endregion
 
+        #region Generate Instances
         internal ExamPaperInstance GenerateExamPaperInstance(Student candidate, out string errorMessage)
         {
             if (Finished)
@@ -239,6 +240,7 @@ namespace HIT.UES.Exam
                 return null;
             }
         }
+        #endregion
 
         #region Inherited and Implemented Members
         public override string CastObjectToJson()

@@ -12,9 +12,12 @@ namespace HIT.UES.Exam
 {
     public class TrueFalseQuestion : ExamQuestion
     {
+        #region Members and Properties
         public string QuestionTrunk { get; private set; }
         public bool? CorrectAnswer { get; private set; }
+        #endregion
 
+        #region Creation Methods
         public TrueFalseQuestion()
         {
             CorrectAnswer = null;
@@ -61,8 +64,10 @@ namespace HIT.UES.Exam
                 return null;
             }
         }
+        #endregion
 
-        internal void SetQuestion(string trunk)
+        #region Question and Answer
+        private void SetQuestion(string trunk)
         {
             QuestionTrunk = trunk;
             LastModifyTime = DateTime.Now;
@@ -72,29 +77,19 @@ namespace HIT.UES.Exam
         {
             if (teacher == Creator)
             {
+                if (Finished)
+                {
+                    errorMessage = FinishedQuestionIsReadonly;
+                    return;
+                }
                 SetQuestion(trunk);
                 errorMessage = null;
             }
             else
                 errorMessage = OperatorNotCreator;
         }
-
-        public override string CastObjectToJson()
-            => JsonConvert.SerializeObject(this, new JsonSerializerSettings
-            { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
-        public override XmlDocument CastObjectToXml()
-            => JsonConvert.DeserializeXmlNode(CastObjectToJson());
-
         public override string GetAnswerString() => CorrectAnswer.ToString();
-
         public override string GetQuestionString() => QuestionTrunk;
-
-        //[Obsolete("Use SetAnswer(bool, Teacher) instead.")]
-        public override void SetAnswer(string answer)
-        {
-            if (answer == "true") CorrectAnswer = true;
-            else if (answer == "false") CorrectAnswer = false;
-        }
         public void SetAnswer(bool answer, Teacher teacher, out string errorMessage)
         {
             if (teacher != Creator)
@@ -107,5 +102,15 @@ namespace HIT.UES.Exam
                 errorMessage = OperatorNotCreator;
             }
         }
+        #endregion
+
+        #region Override and Implemented Members
+        public override string CastObjectToJson()
+            => JsonConvert.SerializeObject(this, new JsonSerializerSettings
+            { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+        public override XmlDocument CastObjectToXml()
+            => JsonConvert.DeserializeXmlNode(CastObjectToJson());
+        #endregion
+
     }
 }

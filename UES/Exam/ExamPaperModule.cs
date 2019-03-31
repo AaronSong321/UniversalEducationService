@@ -9,6 +9,7 @@ namespace HIT.UES.Exam
 {
     public class ExamPaperModule: UESModule
     {
+        #region Creation and Basic Information
         public ExamPaper CreateExamPaper(Exam superiorExam, Teacher creator, string indexWord,
             string description, float duration, ushort score, out string errorMessage)
             => ExamPaper.CreateExamPaper(superiorExam, creator, indexWord, description, duration, score, out errorMessage);
@@ -21,6 +22,7 @@ namespace HIT.UES.Exam
             => paper.CheckConsistency(out inconsistency);
         public void SaveExamPaper(ExamPaper paper, Teacher creator)
             => paper.SaveExamPaper(creator);
+        #endregion
 
         #region Need to add authority check
         public void ChooseQuestion(ExamPaper paper, ExamQuestion q, ushort score, ushort order)
@@ -39,11 +41,12 @@ namespace HIT.UES.Exam
             => paper.ChangeOrder(question, order);
         #endregion
 
-        public List<ExamPaper> CheckAllPapers(Exam exam, Teacher teacher)
-            => exam.AvailableExamPaper;
+        #region Exam Papers and Instances
+        public List<ExamPaper> GetAvailableExamPapers(Exam exam, Teacher teacher)
+            => exam.GetAvaiablePapers(teacher);
+        #endregion
 
-        public ExamPaperGenerator CreateExamPaperGenerator(Teacher creator, Exam exam, ExamQuestionSet set)
-            => new ExamPaperGenerator(exam, creator, set);
+        #region Choose Questions and Create Exam Paper Rules
         public ExplicitlyDividedRule CreateExplicitlyDividedRule(Teacher creator, bool checkTotalScore = true)
             => new ExplicitlyDividedRule(creator, checkTotalScore);
         public void AddRuleEntry(ExplicitlyDividedRule rule, string indexWord, ushort number, 
@@ -63,5 +66,7 @@ namespace HIT.UES.Exam
             => rule.CheckRuleValidity(paper, out invalidity);
         public ushort ChooseQuestions(ExplicitlyDividedRule rule, ExamPaper paper, ExamQuestionSet questionSet)
             => rule.ChooseQuestions(paper, questionSet);
+        #endregion
+
     }
 }

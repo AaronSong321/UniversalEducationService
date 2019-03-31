@@ -9,19 +9,6 @@ using System.Threading.Tasks;
 namespace HIT.UES.Exam
 {
     [NotMapped]
-    public class AutoChecker
-    {
-        public ExamPaperInstance Instance { get; set; }
-        public AutoCheckRule Rule { get; set; }
-
-        public void CheckAnswer()
-        {
-            foreach (var record in Instance.Answers)
-                Rule.CheckAnswer(record);
-        }
-    }
-
-    [NotMapped]
     public class AutoCheckRule
     {
         public virtual void CheckAnswer(StudentAnswerRecord record)
@@ -41,7 +28,7 @@ namespace HIT.UES.Exam
                     break;
             }
         }
-        public virtual double CheckMultipleChoiceAnswer(StudentAnswerRecord record)
+        protected virtual double CheckMultipleChoiceAnswer(StudentAnswerRecord record)
         {
             var answer = record.Answer;
             var correct = record.SuperiorQuestion.GetAnswerString();

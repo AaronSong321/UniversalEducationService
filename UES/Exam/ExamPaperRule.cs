@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using HIT.UES.Login;
-using Newtonsoft.Json.Linq;
 
 namespace HIT.UES.Exam
 {

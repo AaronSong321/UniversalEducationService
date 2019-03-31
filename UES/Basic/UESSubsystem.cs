@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HIT.UES
 {
-    public abstract class UESSubsystem: UESObject
+    public abstract class UESSubsystem
     {
 
     }

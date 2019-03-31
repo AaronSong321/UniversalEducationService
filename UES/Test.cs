@@ -14,8 +14,14 @@ namespace HIT.UES
     [NotMapped]
     public class Test
     {
+        private UESSystem s;
+
         public Test()
         {
+            s = new UESSystem
+            {
+                databaseName = "UES.TestDatabse"
+            };
             Settings.InitDatabase("UES.TestDatabse");
         }
         private bool ExistStudent(string studentName)

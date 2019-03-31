@@ -96,6 +96,7 @@ namespace HIT.UES.Server.Service
                 if (dummyPattern.IsMatch(person.PersonName))
                 {
                     Settings.SaveDataRemove(person);
+                    people.Remove(person);
                 }
             }
 
@@ -132,11 +133,13 @@ namespace HIT.UES.Server.Service
             if (!ExistsExam("Programming language (C++)"))
             {
                 Settings.SaveDataCreation(new Exam.Exam("Programming language (C++)", zhanshen, "Computer Science", "CS OOP C++", "Programming language C++" +
-                    "by zhanshen, welcome to select"));
+                    "by zhanshen, welcome to select", 100, new DateTime(2019, 4, 1), new DateTime(2019, 4, 4), 120, new DateTime(2019, 4, 6), new DateTime(2019, 4, 10),
+                    new DateTime(2019, 4, 17), new DateTime(2019, 4, 3)));
             }
             if (!ExistsExam("Database System"))
                 Settings.SaveDataCreation(new Exam.Exam("Database System", zhanshen, "Computer Science", "Database MySql", "welcome to " +
-                    "database system coures by zhanshen", 100));
+                    "database system coures by zhanshen", 100, new DateTime(2019, 4, 1), new DateTime(2019, 4, 7), 120, new DateTime(2019, 4, 9), new DateTime(2019, 4, 10),
+                    new DateTime(2019, 5, 2), new DateTime(2019, 4, 3)));
         }
 
         private void DemonstrateExam()

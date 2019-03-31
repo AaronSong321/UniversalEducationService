@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HIT.UES
 {
-    public abstract class UESModule: UESObject
+    public abstract class UESModule
     {
         
     }

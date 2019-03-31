@@ -24,7 +24,7 @@ namespace HIT.UES.Login
         //public List<Message> MessageReceived { get; }
         //public List<Course> CourseAttended { get; }
         public List<Exam.Exam> GetExamRegistered() //{ get; private set; }
-            => (from b in Settings.uesContext.Exams where b.SignedInStudent.Contains(this) select b).ToList();
+            => (from b in Settings.uesContext.Exams where b.SignedInStudents.Contains(this) select b).ToList();
 
         public Student()
         {

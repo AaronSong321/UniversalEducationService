@@ -13,6 +13,7 @@ namespace HIT.UES.Exam
 {
     public class ExamPaperInstance : DatabaseType
     {
+        #region Static Error Messages
         public static string NotCandidate = "You are not the candidate of this exam paper.";
         public static string ExamFinished = "Your exam has finished. You cannot answer the questions now.";
         public static string ExamClosed = "The exam has closed. You cannot answer the questions now.";
@@ -20,7 +21,9 @@ namespace HIT.UES.Exam
         public static string TeacherAlreadySubmit = "The answer has been submitted and you need not duplicate the operation.";
         public static string NotOngoing = "The exam has not started yet.";
         public static string NoTotalScore = "There is no total score.";
+        #endregion
 
+        #region Members and Properties
         public int ExamPaperInstanceID { get; private set; }
         public ExamPaper SuperiorExamPaper { get; private set; }
         public Student Candidate { get; private set; }
@@ -37,7 +40,10 @@ namespace HIT.UES.Exam
         public List<StudentAnswerRecord> Answers { get; }
         //public AutoAnswerCheckRule AnswerCheckRule { get; private set; }
         private Thread CountdownTimeThread { get; set; }
+        #endregion
 
+        //Should use bulk insert here
+        #region Creation and Basic Information
         public ExamPaperInstance()
         {
             CountdownTimeThread = null;
@@ -57,33 +63,22 @@ namespace HIT.UES.Exam
             Examiner = null;
             AnswerCheckTime = null;
             Answers = new List<StudentAnswerRecord>();
+
             foreach (var record in superior.QuestionSet)
             {
                 var m = new StudentAnswerRecord(this, record, candidate);
                 Answers.Add(m);
                 Settings.SaveDataCreation(m);
             }
+
             CountdownTimeThread = null;
         }
-        //Generate dummy exam paper instances for tests.
-        //Under construction
+        #endregion
 
         public List<QuestionChooseRecord> GetAllQuestions() => SuperiorExamPaper.QuestionSet;
 
-        /*
-        public string AnswerQuestion(QuestionChooseRecord record, string answer, Student student)
-        {
-            ushort order = record.QuestionOrder;
-            return Answers[order].StoreAnswer(student, answer);
-        }
-        //Don't know what is supposed to do here
-        //Invoke AnswerQuestion once for all questions? Then the parameters?
-        public void SaveAnswers()
-        {
-            throw new NotImplementedException("I don't know what to do here.");
-        }
-        */
 
+        #region Start an Exam
         internal (List<QuestionChooseRecord>, List<StudentAnswerRecord>, double) StartExamPaperInstance()
         {
             Ongoing = true;
@@ -143,7 +138,9 @@ namespace HIT.UES.Exam
             }
             return (null, null, 0);
         }
+        #endregion
 
+        #region Answer Questions and Submit Instance
         public List<StudentAnswerRecord> CheckQuestionAnswered(Student student, out string errorMessage)
         {
             if (student != Candidate)
@@ -189,6 +186,9 @@ namespace HIT.UES.Exam
                 errorMessage = null;
             }
         }
+        #endregion
+
+        #region Teacher
         internal void TeacherSubmit()
         {
             TeacherSubmitted = true;
@@ -211,39 +211,8 @@ namespace HIT.UES.Exam
 
             }
         }
-
-        public void AutoSave()
-        {
-            throw new NotImplementedException("");
-        }
-        public void GeneratePDF(out string errorMessage)
-        {
-            if (!StudentSubmitted)
-            {
-                errorMessage = StudentDidnotSubmit;
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public override string CastObjectToJson()
-            => JsonConvert.SerializeObject(this, new JsonSerializerSettings
-            { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
-        public override XmlDocument CastObjectToXml()
-            => JsonConvert.DeserializeXmlNode(CastObjectToJson());
-
-        public override int GetHashCode()
-            => ExamPaperInstanceID;
-        public override bool Equals(object obj)
-        {
-            if (obj is ExamPaperInstance instance)
-                return ExamPaperInstanceID == instance.ExamPaperInstanceID;
-            else
-                return false;
-        }
-
+        #endregion
+        #region Score and Document
         public double? CalculateTotalScore(out string errorMessage)
         {
             if (!StudentSubmitted)
@@ -270,5 +239,40 @@ namespace HIT.UES.Exam
                 return score;
             }
         }
+        public void GeneratePDF(out string errorMessage)
+        {
+            if (!StudentSubmitted)
+            {
+                errorMessage = StudentDidnotSubmit;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+        #endregion
+
+        public void AutoSave()
+        {
+            throw new NotImplementedException("");
+        }
+
+        #region Override and Implemented Members
+        public override string CastObjectToJson()
+            => JsonConvert.SerializeObject(this, new JsonSerializerSettings
+            { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+        public override XmlDocument CastObjectToXml()
+            => JsonConvert.DeserializeXmlNode(CastObjectToJson());
+
+        public override int GetHashCode()
+            => ExamPaperInstanceID;
+        public override bool Equals(object obj)
+        {
+            if (obj is ExamPaperInstance instance)
+                return ExamPaperInstanceID == instance.ExamPaperInstanceID;
+            else
+                return false;
+        }
+        #endregion
     }
 }

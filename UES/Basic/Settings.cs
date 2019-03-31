@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HIT.UES.Login;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
