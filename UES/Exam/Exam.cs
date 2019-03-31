@@ -14,6 +14,7 @@ namespace HIT.UES.Exam
 {
     public class Exam : DatabaseType
     {
+        #region Static Error Strings
         public static string NotCreator = "You are not the creator of this exam, so you cannot grant other teachers the " +
             "authority of creating exam papers of this exam.";
         public static string NoExamineAuthority = "You do not have the examine authority of this exam, so you cannot check the " +
@@ -21,10 +22,12 @@ namespace HIT.UES.Exam
         public static string NotDepartmentAdmin = "You are not the administrator of your department. Get the authority, or" +
             "you cannot create an exam nor modify the information of an exam.";
         public static string NotSignedIn = "You have not signed in for the exam.";
+        #endregion
 
+        #region Basic Properties
         [Key]
         public int ExamID { get; private set; }
-        [MaxLength(30)]
+        [MaxLength(30), Required]
         public string ExamName { get; private set; }
         public Teacher Creator { get; private set; }
         public Teacher LastOperator { get; private set; }
@@ -34,6 +37,7 @@ namespace HIT.UES.Exam
         public string IndexWord { get; private set; }
         public ushort MaxScore { get; private set; }
         public string Description { get; private set; }
+        #endregion 
 
         #region DateTime Records
         public DateTime CreationTime { get; private set; }
@@ -88,6 +92,14 @@ namespace HIT.UES.Exam
             AvailableExamPaper = new List<ExamPaper>();
             StudentPaper = new List<ExamPaperInstance>();
             SignedInStudent = new List<Student>();
+
+            AllowSignInTime = CreationTime;
+            AllowAttendTime = CreationTime;
+            StudentSubmitDeadline = CreationTime;
+            TeacherSubmitDeadline = CreationTime;
+            ScorePublicTime = CreationTime;
+            ExamPaperGenerationDeadline = CreationTime;
+            LastModifyTime = CreationTime;
         }
         public static (Exam, string) CreateExam(string name, Teacher creator, string department, string indexWord, 
             string description, ushort maxScore = 100)
@@ -242,7 +254,7 @@ namespace HIT.UES.Exam
             else
             {
                 SignedInStudent.Add(student);
-                student.ExamRegistered.Add(this);
+                //student.ExamRegistered.Add(this);
                 Settings.SaveDataModification(this);
                 errorMessage = null;
             }
@@ -256,12 +268,16 @@ namespace HIT.UES.Exam
             else if (DateTime.Now < AllowAttendTime || DateTime.Now > StudentSubmitDeadline)
             {
                 errorMessage = $"This is not the time you can attend the exam. Start time = {AllowAttendTime}, finish" +
-                    $"time = {StudentSubmitDeadline}, current time = {DateTime.Now}";
+                    $" time = {StudentSubmitDeadline}, current time = {DateTime.Now}";
             }
             else
             {
                 var chosenPaper = AvailableExamPaper[new Random().Next(0, AvailableExamPaper.Count)];
                 var k = chosenPaper.GenerateExamPaperInstance(student, out errorMessage);
+                if (k == null)
+                {
+                    return null;
+                }
                 StudentPaper.Add(k);
                 Settings.SaveDataModification(this);
                 k.StartExamPaperInstance();
@@ -300,6 +316,7 @@ namespace HIT.UES.Exam
                 return exam.ExamID == ExamID;
             else return false;
         }
+        public override string ToString() => $"Exam {ExamName}";
         #endregion
     }
 }

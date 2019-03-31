@@ -16,22 +16,24 @@ namespace HIT.UES.Login
     {
         [Key]
         public int StudentID { get; private set; }
-        [MaxLength(30)]
+        [MaxLength(30), Required]
         public string PersonName { get; private set; }
+        [MinLength(6),MaxLength(12),Required]
+        public string Password { get; private set; }
         //public List<MessageBoard> MessageBoardSubscriped { get; }
         //public List<Message> MessageReceived { get; }
         //public List<Course> CourseAttended { get; }
-        [NotMapped]
-        public List<Exam.Exam> ExamRegistered { get; }
+        public List<Exam.Exam> GetExamRegistered() //{ get; private set; }
+            => (from b in Settings.uesContext.Exams where b.SignedInStudent.Contains(this) select b).ToList();
 
         public Student()
         {
-            ExamRegistered = new List<Exam.Exam>();
+
         }
-        public Student(string name)
+        public Student(string name, string password)
         {
             PersonName = name;
-            ExamRegistered = new List<Exam.Exam>();
+            Password = password;
         }
 
         public override string CastObjectToJson()

@@ -27,9 +27,9 @@ namespace HIT.UES.Exam
             string description, ushort maxScore)
             => exam.ModifyExam(name, teacher, department, indexWord, description, maxScore);
         public string ModifyDateTime(Exam exam, Teacher teacher, DateTime allowSignIn, DateTime allowAttend,
-            float examDuration, DateTime studentsubmit,
+            float examDuration, DateTime studentSubmit,
             DateTime teacherSubmit, DateTime scorePublic, DateTime examPaperGeneration)
-            => exam.ModifyDateTime(teacher, allowSignIn, allowAttend, examDuration, studentsubmit,
+            => exam.ModifyDateTime(teacher, allowSignIn, allowAttend, examDuration, studentSubmit,
                 teacherSubmit, scorePublic, examPaperGeneration);
         public void AddToPaperAdmin(Exam exam, Teacher creator, Teacher teacher, out string errorMessage)
             => errorMessage = exam.AddToPaperAdmin(creator, teacher);
@@ -41,5 +41,7 @@ namespace HIT.UES.Exam
             => errorMessage = exam.AddToPaperExaminor(creator, teacher);
         public bool HasExamineAuthority(Exam exam, Teacher teacher)
             => exam.HasExamineAuthority(teacher);
+        public void RemoveFromPaperExaminor(Exam exam, Teacher creator, Teacher teacher, out string em)
+            => em = exam.RemoveFromPaperExaminor(creator, teacher);
     }
 }

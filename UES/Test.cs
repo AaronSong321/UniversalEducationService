@@ -43,22 +43,17 @@ namespace HIT.UES
         public void PersonCreate()
         {
             if (!ExistStudent("Jack"))
-            {
-                var jack = new Student("Jack");
-                Settings.SaveDataCreation(jack);
-            }
+                Settings.SaveDataCreation(new Student("Jack","aaa0001"));
             if (!ExistStudent("Frank"))
-            {
-                Settings.SaveDataCreation(new Student("Frank"));
-            }
+                Settings.SaveDataCreation(new Student("Frank", "aaa0002"));
             if (!ExistStudent("Henry"))
-                Settings.SaveDataCreation(new Student("Henry"));
+                Settings.SaveDataCreation(new Student("Henry", "aaa0003"));
             if (!ExistStudent("Zhanshen"))
-                Settings.SaveDataCreation(new Teacher("Zhanshen"));
+                Settings.SaveDataCreation(new Teacher("Zhanshen", "aaa0004"));
             if (!ExistStudent("Wang"))
-                Settings.SaveDataCreation(new Teacher("Wang"));
+                Settings.SaveDataCreation(new Teacher("Wang", "aaa0005"));
             if (!ExistsAdmin("Zhou"))
-                Settings.SaveDataCreation(new Administrator("Zhou"));
+                Settings.SaveDataCreation(new Administrator("Zhou", "admin001"));
 
             var admin = Settings.uesContext.Administrators;
             var zhous = (from b in admin where b.AdminName == "Zhou" select b).ToList();
@@ -68,8 +63,8 @@ namespace HIT.UES
             }
             var zhou = zhous[0];
             var zhanshen = (from b in Settings.uesContext.Teachers where b.PersonName == "Zhanshen" select b).ToList()[0];
-            string ans = zhou.GrantDepartmentAdminAuthority(zhanshen);
-            if (ans != null)
+            zhou.GrantDepartmentAdminAuthority(zhanshen, out string a);
+            if (a != null)
                 Console.WriteLine(Settings.uesContext.Entry(zhanshen).State);
             Settings.uesContext.SaveChanges();
         }
@@ -82,7 +77,7 @@ namespace HIT.UES
             }
             var teachers = (from b in Settings.uesContext.Teachers select b).ToList();
             foreach (var t in teachers)
-                Console.WriteLine($"Teacher ID={t.TeacherID}, name={t.PersonName}, IsDepartmentAdmin={t.DepartmentAdminAuthority}.");
+                Console.WriteLine($"Teacher ID={t.StudentID}, name={t.PersonName}, IsDepartmentAdmin={t.DepartmentAdminAuthority}.");
         }
 
         public void CounterTest()

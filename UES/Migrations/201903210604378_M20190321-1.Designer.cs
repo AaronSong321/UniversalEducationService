@@ -7,13 +7,13 @@ namespace UES.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class auto : IMigrationMetadata
+    public sealed partial class M201903211 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(auto));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(M201903211));
         
         string IMigrationMetadata.Id
         {
-            get { return "201903061111566_auto"; }
+            get { return "201903210604378_M20190321-1"; }
         }
         
         string IMigrationMetadata.Source

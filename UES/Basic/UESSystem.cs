@@ -13,5 +13,11 @@ namespace HIT.UES
     {
         public LoginSubsystem LoginSubsystem;
         public ExamSubsystem ExamSubsystem;
+
+        public UESSystem()
+        {
+            LoginSubsystem = new LoginSubsystem();
+            ExamSubsystem = new ExamSubsystem();
+        }
     }
 }

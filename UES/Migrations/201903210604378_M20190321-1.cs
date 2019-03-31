@@ -3,7 +3,7 @@ namespace UES.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class auto : DbMigration
+    public partial class M201903211 : DbMigration
     {
         public override void Up()
         {
@@ -12,7 +12,8 @@ namespace UES.Migrations
                 c => new
                     {
                         AdministratorID = c.Int(nullable: false, identity: true),
-                        AdminName = c.String(),
+                        AdminName = c.String(nullable: false, maxLength: 30),
+                        Password = c.String(nullable: false, maxLength: 12),
                     })
                 .PrimaryKey(t => t.AdministratorID);
             
@@ -49,6 +50,8 @@ namespace UES.Migrations
                 c => new
                     {
                         StudentAnswerRecordID = c.Int(nullable: false, identity: true),
+                        Order = c.Int(nullable: false),
+                        MaxScore = c.Int(nullable: false),
                         Score = c.Double(),
                         Answered = c.Boolean(nullable: false),
                         Checked = c.Boolean(nullable: false),
@@ -67,8 +70,8 @@ namespace UES.Migrations
                 c => new
                     {
                         StudentID = c.Int(nullable: false, identity: true),
-                        PersonName = c.String(maxLength: 30),
-                        TeacherID = c.Int(),
+                        PersonName = c.String(nullable: false, maxLength: 30),
+                        Password = c.String(nullable: false, maxLength: 12),
                         DepartmentAdminAuthority = c.Boolean(),
                         Discriminator = c.String(nullable: false, maxLength: 128),
                         ExamQuestionSet_ExamQuestionSetID = c.Int(),
@@ -115,6 +118,8 @@ namespace UES.Migrations
                 c => new
                     {
                         QuestionChooseRecordID = c.Int(nullable: false, identity: true),
+                        QuestionOrder = c.Int(nullable: false),
+                        MaxScore = c.Int(nullable: false),
                         ChooseFinished = c.Boolean(nullable: false),
                         Question_ExamQuestionID = c.Int(),
                         SuperiorExamPaper_ExamPaperID = c.Int(),
@@ -178,7 +183,7 @@ namespace UES.Migrations
                 c => new
                     {
                         ExamID = c.Int(nullable: false, identity: true),
-                        ExamName = c.String(maxLength: 30),
+                        ExamName = c.String(nullable: false, maxLength: 30),
                         Department = c.String(maxLength: 30),
                         IndexWord = c.String(maxLength: 50),
                         Description = c.String(),

@@ -17,18 +17,18 @@ namespace HIT.UES
         public DbSet<Exam.Exam> Exams { get; set; }
         public virtual DbSet<ExamPaper> ExamPapers { get; set; }
         public virtual DbSet<ExamPaperInstance> ExamPaperInstances { get; set; }
-        //public DbSet<ExamPaperRule> ExamPaperRules { get; set; }
         public virtual DbSet<ExamQuestion> ExamQuestions { get; set; }
         public virtual DbSet<ExamQuestionSet> ExamQuestionSets { get; set; }
+        //public DbSet<ExamPaperRule> ExamPaperRules { get; set; }
 
 
         public UESContext(string databaseName): base(databaseName)
         {
-
+            //var instance = System.Data.Entity.SqlServer.SqlProviderServices.Instance;
         }
         public UESContext(): base()
         {
-
+            //var instance = System.Data.Entity.SqlServer.SqlProviderServices.Instance;
         }
     }
 }

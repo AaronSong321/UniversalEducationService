@@ -12,7 +12,10 @@ namespace HIT.UES.Login
 {
     public class Administrator : DatabaseType
     {
+        [MaxLength(30),Required]
         public string AdminName { get; private set; }
+        [MinLength(6),MaxLength(12), Required]
+        public string Password { get; private set; }
         [Key]
         public int AdministratorID { get; private set; }
 
@@ -20,30 +23,38 @@ namespace HIT.UES.Login
         {
 
         }
-        public Administrator(string n)
+        public Administrator(string name, string password)
         {
-            AdminName = n;
+            AdminName = name;
+            Password = password;
         }
 
-        public string GrantDepartmentAdminAuthority(Teacher teacher)
+        public void GrantDepartmentAdminAuthority(Teacher teacher, out string em)
         {
             if (teacher.DepartmentAdminAuthority)
-                return $"Teacher {teacher.PersonName} has already had the department administration authority.";
+            {
+                em = $"Teacher {teacher.PersonName} has already had the department administration authority.";
+            }
             else
             {
                 teacher.GetDepartmentAdminAuthority();
-                return null;
+                Settings.SaveDataModification(teacher);
+                em = null;
             }
         }
-        public string RecallDepartmentAdminAuthority(Teacher teacher)
+        public void RecallDepartmentAdminAuthority(Teacher teacher, out string em)
         {
             if (teacher.DepartmentAdminAuthority)
             {
                 teacher.LoseDepartmentAdminAuthority();
-                return null;
+                Settings.SaveDataModification(teacher);
+                em = null;
             }
             else
-                return $"Teacher {teacher.PersonName} does not have the department administration authority.";
+            {
+                em = $"Teacher {teacher.PersonName} does not have the department administration authority.";
+
+            }
         }
 
         //public void SetDatabaseName(string name) => Settings.uesContext. = name;

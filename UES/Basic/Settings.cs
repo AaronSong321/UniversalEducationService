@@ -11,7 +11,7 @@ namespace HIT.UES
     {
         //internal static void Log(string s) => Console.WriteLine(s);
         public static UESContext uesContext;
-        public static void InitDatabase(string databaseName = "HIT.UES.Database")
+        public static void InitDatabase(string databaseName)
         {
             uesContext = new UESContext(databaseName);
             //uesContext.Database.Log = Console.Write;

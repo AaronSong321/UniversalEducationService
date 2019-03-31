@@ -13,6 +13,7 @@ namespace HIT.UES.Exam
 {
     public class ExamPaper : DatabaseType, IOrderedDataContainer<QuestionChooseRecord>
     {
+        #region Static Error Messages
         public static ushort paperTotalScore = 100;
         public static string MaxScoreViolation(float currentScore, float maxScore)
             => $"Maximum score violation: current score {(int)(currentScore+0.01)}, max score {(int)(maxScore+0.01)}";
@@ -26,8 +27,9 @@ namespace HIT.UES.Exam
             "anymore. But you may create a copy of it.";
         public static string NotFinished = "This exam paper has not been finished, so you cannot create an instance of it " +
             "for a student.";
+        #endregion
 
-
+        #region Fields and Properties
         public int ExamPaperID { get; private set; }
         public Exam SuperiorExam { get; private set; }
         public string ExamPaperName { get; private set; }
@@ -41,7 +43,9 @@ namespace HIT.UES.Exam
         public bool Finished { get; private set; }
         public List<QuestionChooseRecord> QuestionSet { get; private set; }
         public List<ExamPaperInstance> Instances { get; private set; }
+        #endregion
 
+        #region Constructors and Basic Information
         public ExamPaper()
         {
 
@@ -137,7 +141,9 @@ namespace HIT.UES.Exam
                 return null;
             }
         }
+        #endregion
 
+        #region Choose Questions
         internal void ChooseQuestion(ExamQuestion q, ushort score, ushort order)
         {
             var record = new QuestionChooseRecord(this, score, order, q);
@@ -156,7 +162,9 @@ namespace HIT.UES.Exam
                     return true;
             return false;
         }
+        #endregion
 
+        #region Check Consistency
         [NotMapped]
         public float CurrentScore
         {
@@ -212,6 +220,8 @@ namespace HIT.UES.Exam
                 Settings.SaveDataModification(this);
             }
         }
+        #endregion
+
         internal ExamPaperInstance GenerateExamPaperInstance(Student candidate, out string errorMessage)
         {
             if (Finished)

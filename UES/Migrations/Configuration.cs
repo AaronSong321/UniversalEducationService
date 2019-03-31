@@ -9,7 +9,7 @@ namespace UES.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationsEnabled = false;
         }
 
         protected override void Seed(HIT.UES.UESContext context)
